@@ -16,7 +16,7 @@
 	</style>
 	<script src="maze.js"></script>
 	<script>
-		var m,w,h,interval; 
+		var m,w,h,interval,trailing_deltragrid; 
 		reset(50,25);
 		fastrun();
 		document.getElementById('runbutton').focus(); 
@@ -37,11 +37,20 @@
 			document.getElementById('maze').innerHTML=res;
 		}
 		function draw_delta(grid) {
-			var e=document.getElementById('g'+m.deltagrid[0]);
-			if (e) {
-				//e.classList.remove('free');
-				if (m.deltagrid[1]=='0') {e.classList.add('path');}
-				if (m.deltagrid[1]=='1') {e.classList.add('wall');}
+			if (trailing_deltragrid) {
+				var e1=document.getElementById('g'+trailing_deltragrid[0]);
+				if (e1) {
+					e1.classList.remove('current');
+					if (trailing_deltragrid[1]=='0') {e1.classList.add('path');}
+					if (trailing_deltragrid[1]=='1') {e1.classList.add('wall');}
+				}
+			}
+			trailing_deltragrid=m.deltagrid;
+			var e2=document.getElementById('g'+m.deltagrid[0]);
+			if (e2) {
+				e2.classList.remove('free');
+				if (m.deltagrid[1]=='0') {e2.classList.add('current');}
+				if (m.deltagrid[1]=='1') {e2.classList.add('current');}
 			}
 			return grid;
 		}
