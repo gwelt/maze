@@ -22,7 +22,7 @@ Maze.prototype.genstep = function () {
 	}
 
 	// shuffle trace sometimes to get shorter paths
-	if (Math.floor(Math.random()*10)<1) {shuffle(this.trace)}
+	if (Math.floor(Math.random()*(this.w+this.h)/8)<1) {shuffle(this.trace)}
 	// reset delta-grid-information (nothing has changed so far)
 	this.deltagrid=[];
 	// resume at latest position
