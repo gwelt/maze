@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html lang="de">
+<head><title>maze</title></head>
+<body>
+	<div id=maze class=grid></div>
+	<div class=grid><br><button onclick=reset()>reset</button> <button onclick=step()>step</button> <button id='runbutton' onclick=run()>run</button> <button id='runbutton' onclick=stop()>stop</button> <button onclick=fastrun()>fastrun</button></div>
+	<style>
+		body {margin:10px;}
+		.grid {font-family: monospace; clear:both;}
+		.free,.wall,.path,.current {float:left; height:15px; width:15px; margin:0px;}
+		.free {background-color: #222;}
+		.wall {background-color: #222;}
+		.path {background-color: #aaa;}
+		.current {background-color: #f55;}
+	</style>
+	<script src="maze.js"></script>
+	<script>
+		var m,w,h,interval; 
+		reset(50,25);
+		fastrun();
+		document.getElementById('runbutton').focus(); 
+		function reset(wl,hl) {w=wl|w; h=hl|h; m=new Maze(w,h); console.clear(); draw(m);};
+		function step() {stop(); return draw_delta(m.genstep())}
+		function run() {stop(); if (m.finished) {reset()}; interval=setInterval(function () {if (!draw_delta(m.genstep())) {clearInterval(interval)}} ,0)};
+		function stop() {clearInterval(interval)};
+		function fastrun() {if (m.finished) {reset()}; while(m.genstep()){}; draw(m);};
+		function draw(m) {
+			var subres= '', res = '', i = 0;
+			while (i<m.w*m.h) {
+				if (m.grid[i]=='X') {subres+='<div id=g'+i+' class=free></div>'}
+				if (m.grid[i]=='0') {subres+='<div id=g'+i+' class=path></div>'}
+				if (m.grid[i]=='1') {subres+='<div id=g'+i+' class=wall></div>'}
+				if ((i+1)%m.w==0) {res='<div style=clear:both>'+subres+'</div>'+res; subres='';}
+				i++;
+			}
+			document.getElementById('maze').innerHTML=res;
+		}
+		function draw_delta(grid) {
+			var e=document.getElementById('g'+m.deltagrid[0]);
+			if (e) {
+				//e.classList.remove('free');
+				if (m.deltagrid[1]=='0') {e.classList.add('path');}
+				if (m.deltagrid[1]=='1') {e.classList.add('wall');}
+			}
+			return grid;
+		}
+	</script>
+</body>
+</html>
