@@ -1,3 +1,3 @@
 # maze
-javascript maze generator
+javascript maze generator  
 https://gwelt.github.io/maze/
