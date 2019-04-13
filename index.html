@@ -20,7 +20,7 @@
 		reset(50,25);
 		fastrun();
 		document.getElementById('runbutton').focus(); 
-		function reset(wl,hl) {w=wl|w; h=hl|h; m=new Maze(w,h); console.clear(); draw(m);};
+		function reset(wl,hl) {w=wl|w; h=hl|h; m=new Maze(w,h); trailing_deltragrid=undefined; console.clear(); draw(m);};
 		function step() {stop(); return draw_delta(m.genstep())}
 		function run() {stop(); if (m.finished) {reset()}; interval=setInterval(function () {if (!draw_delta(m.genstep())) {clearInterval(interval)}} ,0)};
 		function stop() {clearInterval(interval)};
