@@ -29,12 +29,17 @@ Maze.prototype.genstep = function () {
 	var p=this.trace.pop();
 	// determine possible moves
 	var approaches=[];
-	if (this.isFree([this.top(p)])) {approaches.push('top')};
-	if (this.isFree([this.right(p)])) {approaches.push('right')};
-	if (this.isFree([this.bottom(p)])) {approaches.push('bottom')};
-	if (this.isFree([this.left(p)])) {approaches.push('left')};
+	var real_approaches_counter=0;
+	if (this.isFree([this.top(p)])) {approaches.push('top'); real_approaches_counter++} 
+		else if (this.isPath([this.top(p)]) && this.isFree([this.bottom(p)])) {approaches.push('bottom')}; // zikzak avoiding system (make it more likely to not change direction)
+	if (this.isFree([this.right(p)])) {approaches.push('right'); real_approaches_counter++}
+		else if (this.isPath([this.right(p)]) && this.isFree([this.left(p)])) {approaches.push('left')}; // zikzak avoiding system (make it more likely to not change direction)
+	if (this.isFree([this.bottom(p)])) {approaches.push('bottom'); real_approaches_counter++}
+		else if (this.isPath([this.bottom(p)]) && this.isFree([this.top(p)])) {approaches.push('top')}; // zikzak avoiding system (make it more likely to not change direction)
+	if (this.isFree([this.left(p)])) {approaches.push('left'); real_approaches_counter++}
+		else if (this.isPath([this.left(p)]) && this.isFree([this.right(p)])) {approaches.push('right')}; // zikzak avoiding system (make it more likely to not change direction)
 	// if there is more than one direction to approach from here, keep this position in trace
-	if (approaches.length>1) {this.trace.push(p)}
+	if (real_approaches_counter>1) {this.trace.push(p)}
 	// choose an approach
 	var approach=approaches[Math.floor(Math.random()*approaches.length)];
 
