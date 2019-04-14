@@ -22,7 +22,7 @@ Maze.prototype.genstep = function () {
 	}
 
 	// shuffle trace sometimes to get shorter paths
-	if (Math.floor(Math.random()*(this.w+this.h)/8)<1) {shuffle(this.trace)}
+	//if (Math.floor(Math.random()*(this.w+this.h)/8)<1) {shuffle(this.trace)}
 	// reset delta-grid-information (nothing has changed so far)
 	this.deltagrid=[];
 	// resume at latest position
@@ -31,13 +31,13 @@ Maze.prototype.genstep = function () {
 	var approaches=[];
 	var real_approaches_counter=0;
 	if (this.isFree([this.top(p)])) {approaches.push('top'); real_approaches_counter++} 
-		else if (this.isPath([this.top(p)]) && this.isFree([this.bottom(p)])) {approaches.push('bottom')}; // zikzak avoiding system (make it more likely to not change direction)
+		else if (this.isPath([this.top(p)]) && this.isFree([this.bottom(p)])) {approaches.push('bottom');approaches.push('bottom')}; // zikzak avoiding system (make it more likely to not change direction)
 	if (this.isFree([this.right(p)])) {approaches.push('right'); real_approaches_counter++}
-		else if (this.isPath([this.right(p)]) && this.isFree([this.left(p)])) {approaches.push('left')}; // zikzak avoiding system (make it more likely to not change direction)
+		else if (this.isPath([this.right(p)]) && this.isFree([this.left(p)])) {approaches.push('left');approaches.push('left')}; // zikzak avoiding system (make it more likely to not change direction)
 	if (this.isFree([this.bottom(p)])) {approaches.push('bottom'); real_approaches_counter++}
-		else if (this.isPath([this.bottom(p)]) && this.isFree([this.top(p)])) {approaches.push('top')}; // zikzak avoiding system (make it more likely to not change direction)
+		else if (this.isPath([this.bottom(p)]) && this.isFree([this.top(p)])) {approaches.push('top');approaches.push('top')}; // zikzak avoiding system (make it more likely to not change direction)
 	if (this.isFree([this.left(p)])) {approaches.push('left'); real_approaches_counter++}
-		else if (this.isPath([this.left(p)]) && this.isFree([this.right(p)])) {approaches.push('right')}; // zikzak avoiding system (make it more likely to not change direction)
+		else if (this.isPath([this.left(p)]) && this.isFree([this.right(p)])) {approaches.push('right');approaches.push('right')}; // zikzak avoiding system (make it more likely to not change direction)
 	// if there is more than one direction to approach from here, keep this position in trace
 	if (real_approaches_counter>1) {this.trace.push(p)}
 	// choose an approach
