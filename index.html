@@ -20,11 +20,13 @@
 		reset(50,25);
 		fastrun();
 		document.getElementById('runbutton').focus(); 
+		
 		function reset(wl,hl) {w=wl|w; h=hl|h; m=new Maze(w,h); trailing_deltragrid=undefined; console.clear(); draw(m);};
 		function step() {stop(); return draw_delta(m.genstep())}
 		function run() {stop(); if (m.finished) {reset()}; interval=setInterval(function () {if (!draw_delta(m.genstep())) {clearInterval(interval)}} ,0)};
 		function stop() {clearInterval(interval)};
 		function fastrun() {if (m.finished) {reset()}; while(m.genstep()){}; draw(m);};
+		
 		function draw(m) {
 			var subres= '', res = '', i = 0;
 			while (i<m.w*m.h) {
@@ -36,7 +38,16 @@
 			}
 			document.getElementById('maze').innerHTML=res;
 		}
+		
 		function draw_delta(grid) {
+			// draw a red dot for current position
+			var e2=document.getElementById('g'+m.deltagrid[0]);
+			if (e2) {
+				e2.classList.remove('free');
+				if (m.deltagrid[1]=='0') {e2.classList.add('current');}
+				if (m.deltagrid[1]=='1') {e2.classList.add('current');}
+			}
+			// redraw last position (we put current/red color there to indicate the current position) with actual state (path or wall)
 			if (trailing_deltragrid) {
 				var e1=document.getElementById('g'+trailing_deltragrid[0]);
 				if (e1) {
@@ -45,13 +56,9 @@
 					if (trailing_deltragrid[1]=='1') {e1.classList.add('wall');}
 				}
 			}
+			// remember current position to redraw it if we move forward
 			trailing_deltragrid=m.deltagrid;
-			var e2=document.getElementById('g'+m.deltagrid[0]);
-			if (e2) {
-				e2.classList.remove('free');
-				if (m.deltagrid[1]=='0') {e2.classList.add('current');}
-				if (m.deltagrid[1]=='1') {e2.classList.add('current');}
-			}
+			// function takes grid as parameter although it does not acutally use it, because it has to return grid=0 when finished
 			return grid;
 		}
 	</script>

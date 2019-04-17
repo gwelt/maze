@@ -22,26 +22,28 @@ Maze.prototype.genstep = function () {
 	}
 
 	// shuffle trace sometimes to get shorter paths
-	//if (Math.floor(Math.random()*(this.w+this.h)/8)<1) {shuffle(this.trace)}
-	// reset delta-grid-information (nothing has changed so far)
-	this.deltagrid=[];
+	if (Math.floor(Math.random()*(this.w+this.h)/2)<1) {shuffle(this.trace)}
 	// resume at latest position
 	var p=this.trace.pop();
-	// determine possible moves
+	// determine possible moves (approach)
 	var approaches=[];
-	var real_approaches_counter=0;
-	if (this.isFree([this.top(p)])) {approaches.push('top'); real_approaches_counter++} 
-		else if (this.isPath([this.top(p)]) && this.isFree([this.bottom(p)])) {approaches.push('bottom');approaches.push('bottom')}; // zikzak avoiding system (make it more likely to not change direction)
-	if (this.isFree([this.right(p)])) {approaches.push('right'); real_approaches_counter++}
-		else if (this.isPath([this.right(p)]) && this.isFree([this.left(p)])) {approaches.push('left');approaches.push('left')}; // zikzak avoiding system (make it more likely to not change direction)
-	if (this.isFree([this.bottom(p)])) {approaches.push('bottom'); real_approaches_counter++}
-		else if (this.isPath([this.bottom(p)]) && this.isFree([this.top(p)])) {approaches.push('top');approaches.push('top')}; // zikzak avoiding system (make it more likely to not change direction)
-	if (this.isFree([this.left(p)])) {approaches.push('left'); real_approaches_counter++}
-		else if (this.isPath([this.left(p)]) && this.isFree([this.right(p)])) {approaches.push('right');approaches.push('right')}; // zikzak avoiding system (make it more likely to not change direction)
+	var approaches_counter=0;
+	if (this.isFree([this.top(p)])) {approaches.push('top'); approaches_counter++} 
+		// zikzak avoiding system (make it more likely to not change direction)
+		else if (this.isPath([this.top(p)]) && this.isFree([this.bottom(p)])) {approaches.push('bottom');approaches.push('bottom');approaches.push('bottom')}; 
+	if (this.isFree([this.right(p)])) {approaches.push('right'); approaches_counter++}
+		else if (this.isPath([this.right(p)]) && this.isFree([this.left(p)])) {approaches.push('left');approaches.push('left');approaches.push('left')};
+	if (this.isFree([this.bottom(p)])) {approaches.push('bottom'); approaches_counter++}
+		else if (this.isPath([this.bottom(p)]) && this.isFree([this.top(p)])) {approaches.push('top');approaches.push('top');approaches.push('top')}; 
+	if (this.isFree([this.left(p)])) {approaches.push('left'); approaches_counter++}
+		else if (this.isPath([this.left(p)]) && this.isFree([this.right(p)])) {approaches.push('right');approaches.push('right');approaches.push('right')}; 
 	// if there is more than one direction to approach from here, keep this position in trace
-	if (real_approaches_counter>1) {this.trace.push(p)}
+	if (approaches_counter>1) {this.trace.push(p)}
 	// choose an approach
 	var approach=approaches[Math.floor(Math.random()*approaches.length)];
+
+	// reset delta-grid-information (it holds the change of the current step for faster drawing (just the delta needs to be updated))
+	this.deltagrid=[];
 
 	// check all positions that must not be a path in order to move that way (set a path) - else set a wall
 	if (approach=='top') {
